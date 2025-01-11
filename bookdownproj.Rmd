@@ -1,3 +1,12 @@
+--- 
+title: "Skin Laundry Technical Assessment"
+author: "Austin Kolvek"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+
+<!--chapter:end:index.Rmd-->
+
 ---
 output: bookdown::html_document2
 ---
@@ -19,4 +28,7 @@ print(data.i)
 ```{python}
 print(2+2)
 ```
+
+
+<!--chapter:end:EDA.qmd-->
 
