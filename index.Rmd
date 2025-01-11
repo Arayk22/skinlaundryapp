@@ -4,7 +4,3 @@ author: "Austin Kolvek"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
-
-# Technical Assessment
-
-Executive Summary
