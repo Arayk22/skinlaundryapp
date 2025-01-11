@@ -6,12 +6,64 @@ output: bookdown::html_document2
 
 ```{python}
 import pandas as pd
-
 data = pd.read_csv(r'C:\Users\austi\OneDrive\Documents\Interviews\Skin Laundry\Clinic Product Sales Data.csv') 
 ```
+
 
 Lets take a look at the first couple of observations!
 
 ```{python}
+#Set the display up so we can see all of the columns
+pd.set_option('display.max_columns', None)
 print(data.head())
 ```
+Right away, some of the columns that don't seem to be needed are "guest user id,
+product category, and clinic area. Lets check the unique values of product category to make
+sure we can drop it
+
+```{python}
+print(data['product category'].unique())
+```
+"Serum" is the only value for the category, so we are good to drop this column
+as it provides no info for us
+
+Lets drop the columns we stated above
+
+```{python}
+data = data.drop(columns=['clinic area','guest user id','product category'])
+print(data.head())
+```
+
+Next I am going to subset the data down to info that Skin Laundry as specified
+
+```{python}
+subset_data = data[(data['clinic name'] == 'Clinic G') & (data['product name'] == 'Hyaluronic Acid Serum')]
+print(subset_data.head())
+
+```
+
+Next I am going to make sure the our variables are of correct type. Any
+variables that are not of the correct type, I will correct accordingly.
+
+```{python}
+print(subset_data.info())
+```
+I am going to change the "sale date" column to a datetime data type
+
+```{python}
+subset_data.loc[:, 'sale date'] = pd.to_datetime(subset_data['sale date'])
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -7,4 +7,6 @@ site: bookdown::bookdown_site
 
 # Welcome to the Skin Laundry App
 
-This is an introductory section.
+The goal of this assessment is to take the data Skin Laundry has provided and 
+build a forecasting model that will predict future demand for their Hyaluronic
+Acid Serum at clinic G during Q3 of 2024 (July - September 2024).

@@ -8,4 +8,4 @@ rmd_files:
   - EDA.qmd
 language:
   ui:
-    chapter_name: "Section"  
+    chapter_name: ""  

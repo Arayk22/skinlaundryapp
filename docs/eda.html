@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section2 EDA | Skin Laundry Technical Assessment</title>
-  <meta name="description" content="Section2 EDA | Skin Laundry Technical Assessment" />
+  <title>2 EDA | Skin Laundry Technical Assessment</title>
+  <meta name="description" content="2 EDA | Skin Laundry Technical Assessment" />
   <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section2 EDA | Skin Laundry Technical Assessment" />
+  <meta property="og:title" content="2 EDA | Skin Laundry Technical Assessment" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section2 EDA | Skin Laundry Technical Assessment" />
+  <meta name="twitter:title" content="2 EDA | Skin Laundry Technical Assessment" />
   
   
   
@@ -162,20 +162,68 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="eda" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">Section2</span> EDA<a href="eda.html#eda" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<h1><span class="header-section-number">2</span> EDA<a href="eda.html#eda" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="eda.html#cb1-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="eda.html#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="eda.html#cb1-3" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="vs">r&#39;C:\Users\austi\OneDrive\Documents\Interviews\Skin Laundry\Clinic Product Sales Data.csv&#39;</span>) </span></code></pre></div>
+<span id="cb1-2"><a href="eda.html#cb1-2" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="vs">r&#39;C:\Users\austi\OneDrive\Documents\Interviews\Skin Laundry\Clinic Product Sales Data.csv&#39;</span>) </span></code></pre></div>
 <p>Lets take a look at the first couple of observations!</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="eda.html#cb2-1" tabindex="-1"></a><span class="bu">print</span>(data.head())</span></code></pre></div>
-<pre><code>##   clinic area clinic name  ... product category quantity sold
-## 0    Region B    Clinic G  ...            Serum             1
-## 1    Region A    Clinic E  ...            Serum             1
-## 2    Region B    Clinic G  ...            Serum             1
-## 3    Region A    Clinic E  ...            Serum             1
-## 4    Region A    Clinic E  ...            Serum             1
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="eda.html#cb2-1" tabindex="-1"></a><span class="co">#Set the display up so we can see all of the columns</span></span>
+<span id="cb2-2"><a href="eda.html#cb2-2" tabindex="-1"></a>pd.set_option(<span class="st">&#39;display.max_columns&#39;</span>, <span class="va">None</span>)</span>
+<span id="cb2-3"><a href="eda.html#cb2-3" tabindex="-1"></a><span class="bu">print</span>(data.head())</span></code></pre></div>
+<pre><code>##   clinic area clinic name  sale date                         guest user id  \
+## 0    Region B    Clinic G   1/2/2022  2327eb10-952d-431f-8e97-61d37b81944d   
+## 1    Region A    Clinic E   1/5/2022  ace86dd7-8bfc-4c59-ae96-62aeb14fc843   
+## 2    Region B    Clinic G   1/8/2022  668a1fb3-b42f-425b-8252-4876779cc7b3   
+## 3    Region A    Clinic E   1/9/2022  ec01a76e-b6fa-4209-8ffb-0a8b7e7934dd   
+## 4    Region A    Clinic E  1/12/2022  6aa914d4-65e0-4dc1-a211-1c85b3f602a8   
 ## 
-## [5 rows x 7 columns]</code></pre>
+##                product name product category  quantity sold  
+## 0  TA Tranexamic Acid Serum            Serum              1  
+## 1     Hyaluronic Acid Serum            Serum              1  
+## 2     Hyaluronic Acid Serum            Serum              1  
+## 3  TA Tranexamic Acid Serum            Serum              1  
+## 4  TA Tranexamic Acid Serum            Serum              1</code></pre>
+<p>Right away, some of the columns that don’t seem to be needed are “guest user id,
+product category, and clinic area. Lets check the unique values of product category to make
+sure we can drop it</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="eda.html#cb4-1" tabindex="-1"></a><span class="bu">print</span>(data[<span class="st">&#39;product category&#39;</span>].unique())</span></code></pre></div>
+<pre><code>## [&#39;Serum&#39;]</code></pre>
+<p>“Serum” is the only value for the category, so we are good to drop this column
+as it provides no info for us</p>
+<p>Lets drop the columns we stated above</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="eda.html#cb6-1" tabindex="-1"></a>data <span class="op">=</span> data.drop(columns<span class="op">=</span>[<span class="st">&#39;clinic area&#39;</span>,<span class="st">&#39;guest user id&#39;</span>,<span class="st">&#39;product category&#39;</span>])</span>
+<span id="cb6-2"><a href="eda.html#cb6-2" tabindex="-1"></a><span class="bu">print</span>(data.head())</span></code></pre></div>
+<pre><code>##   clinic name  sale date              product name  quantity sold
+## 0    Clinic G   1/2/2022  TA Tranexamic Acid Serum              1
+## 1    Clinic E   1/5/2022     Hyaluronic Acid Serum              1
+## 2    Clinic G   1/8/2022     Hyaluronic Acid Serum              1
+## 3    Clinic E   1/9/2022  TA Tranexamic Acid Serum              1
+## 4    Clinic E  1/12/2022  TA Tranexamic Acid Serum              1</code></pre>
+<p>Next I am going to subset the data down to info that Skin Laundry as specified</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="eda.html#cb8-1" tabindex="-1"></a>subset_data <span class="op">=</span> data[(data[<span class="st">&#39;clinic name&#39;</span>] <span class="op">==</span> <span class="st">&#39;Clinic G&#39;</span>) <span class="op">&amp;</span> (data[<span class="st">&#39;product name&#39;</span>] <span class="op">==</span> <span class="st">&#39;Hyaluronic Acid Serum&#39;</span>)]</span>
+<span id="cb8-2"><a href="eda.html#cb8-2" tabindex="-1"></a><span class="bu">print</span>(subset_data.head())</span></code></pre></div>
+<pre><code>##    clinic name  sale date           product name  quantity sold
+## 2     Clinic G   1/8/2022  Hyaluronic Acid Serum              1
+## 8     Clinic G  1/15/2022  Hyaluronic Acid Serum              1
+## 9     Clinic G  1/17/2022  Hyaluronic Acid Serum              1
+## 16    Clinic G  1/23/2022  Hyaluronic Acid Serum              1
+## 17    Clinic G  1/24/2022  Hyaluronic Acid Serum              1</code></pre>
+<p>Next I am going to make sure the our variables are of correct type. Any
+variables that are not of the correct type, I will correct accordingly.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="eda.html#cb10-1" tabindex="-1"></a><span class="bu">print</span>(subset_data.info())</span></code></pre></div>
+<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+## Index: 1415 entries, 2 to 16420
+## Data columns (total 4 columns):
+##  #   Column         Non-Null Count  Dtype 
+## ---  ------         --------------  ----- 
+##  0   clinic name    1415 non-null   object
+##  1   sale date      1415 non-null   object
+##  2   product name   1415 non-null   object
+##  3   quantity sold  1415 non-null   int64 
+## dtypes: int64(1), object(3)
+## memory usage: 55.3+ KB
+## None</code></pre>
+<p>I am going to change the “sale date” column to a datetime data type</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="eda.html#cb12-1" tabindex="-1"></a>subset_data.loc[:, <span class="st">&#39;sale date&#39;</span>] <span class="op">=</span> pd.to_datetime(subset_data[<span class="st">&#39;sale date&#39;</span>])</span></code></pre></div>
 
 </div>
             </section>
