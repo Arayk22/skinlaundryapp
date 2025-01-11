@@ -6,3 +6,6 @@ view: https://github.com/Arayk22/skinlaundryapp.git/%s
 rmd_files:
   - index.Rmd
   - EDA.qmd
+language:
+  ui:
+    chapter_name: "Section"  

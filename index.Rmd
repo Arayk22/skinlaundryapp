@@ -4,3 +4,14 @@ author: "Austin Kolvek"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
+
+# Welcome to the Skin Laundry App
+
+This is an introductory section.
+
+# Data Analysis
+
+## Load the Data
+Here we perform exploratory data analysis...
+
+```{r child="EDA.qmd"}
