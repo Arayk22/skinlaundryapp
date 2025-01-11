@@ -2,10 +2,18 @@
 output: html_document
 ---
 
-Here is where I am going to do the analysis
+# EDA
 
-```{r}
-2+2
+#Load the data
+
+```{python}
+import pandas as pd
+
+data = pd.read_csv(r'C:\Users\austi\OneDrive\Documents\Interviews\Skin Laundry\Clinic Product Sales Data.csv') 
+
+print(data.head())
+print(data.info())
+
 ```
 
 ```{python}
