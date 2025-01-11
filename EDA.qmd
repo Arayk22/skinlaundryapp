@@ -2,9 +2,9 @@
 output: bookdown::html_document2
 ---
 
-# EDA
+#  EDA
 
-#Import Data, Clean Data, and Subset Down
+# Import Data, Clean Data, and Subset Down
 
 ```{python}
 import pandas as pd

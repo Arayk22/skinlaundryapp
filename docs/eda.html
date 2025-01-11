@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="index.html"/>
-
+<link rel="next" href="import-data-clean-data-and-subset-down.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -142,6 +142,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Welcome to the Skin Laundry App</a></li>
 <li class="chapter" data-level="2" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>2</b> EDA</a></li>
+<li class="chapter" data-level="3" data-path="import-data-clean-data-and-subset-down.html"><a href="import-data-clean-data-and-subset-down.html"><i class="fa fa-check"></i><b>3</b> Import Data, Clean Data, and Subset Down</a></li>
+<li class="chapter" data-level="4" data-path="modeling.html"><a href="modeling.html"><i class="fa fa-check"></i><b>4</b> Modeling</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -163,109 +165,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="eda" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">2</span> EDA<a href="eda.html#eda" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>#Import Data, Clean Data, and Subset Down</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="eda.html#cb1-1" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="eda.html#cb1-2" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="vs">r&#39;C:\Users\austi\OneDrive\Documents\Interviews\Skin Laundry\Clinic Product Sales Data.csv&#39;</span>) </span></code></pre></div>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-102-1.png" width="672" /></p>
-<p>Lets take a look at the first couple of observations!</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="eda.html#cb2-1" tabindex="-1"></a><span class="co">#Set the display up so we can see all of the columns</span></span>
-<span id="cb2-2"><a href="eda.html#cb2-2" tabindex="-1"></a>pd.set_option(<span class="st">&#39;display.max_columns&#39;</span>, <span class="va">None</span>)</span>
-<span id="cb2-3"><a href="eda.html#cb2-3" tabindex="-1"></a><span class="bu">print</span>(data.head())</span></code></pre></div>
-<pre><code>##   clinic area clinic name  sale date                         guest user id  \
-## 0    Region B    Clinic G   1/2/2022  2327eb10-952d-431f-8e97-61d37b81944d   
-## 1    Region A    Clinic E   1/5/2022  ace86dd7-8bfc-4c59-ae96-62aeb14fc843   
-## 2    Region B    Clinic G   1/8/2022  668a1fb3-b42f-425b-8252-4876779cc7b3   
-## 3    Region A    Clinic E   1/9/2022  ec01a76e-b6fa-4209-8ffb-0a8b7e7934dd   
-## 4    Region A    Clinic E  1/12/2022  6aa914d4-65e0-4dc1-a211-1c85b3f602a8   
-## 
-##                product name product category  quantity sold  
-## 0  TA Tranexamic Acid Serum            Serum              1  
-## 1     Hyaluronic Acid Serum            Serum              1  
-## 2     Hyaluronic Acid Serum            Serum              1  
-## 3  TA Tranexamic Acid Serum            Serum              1  
-## 4  TA Tranexamic Acid Serum            Serum              1</code></pre>
-<p>Right away, some of the columns that don’t seem to be needed are “guest user id,
-product category, and clinic area. Lets check the unique values of product category to make
-sure we can drop it</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="eda.html#cb4-1" tabindex="-1"></a><span class="bu">print</span>(data[<span class="st">&#39;product category&#39;</span>].unique())</span></code></pre></div>
-<pre><code>## [&#39;Serum&#39;]</code></pre>
-<p>“Serum” is the only value for the category, so we are good to drop this column
-as it provides no info for us</p>
-<p>Lets drop the columns we stated above.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="eda.html#cb6-1" tabindex="-1"></a>data <span class="op">=</span> data.drop(columns<span class="op">=</span>[<span class="st">&#39;clinic area&#39;</span>,<span class="st">&#39;guest user id&#39;</span>,<span class="st">&#39;product category&#39;</span>])</span>
-<span id="cb6-2"><a href="eda.html#cb6-2" tabindex="-1"></a><span class="bu">print</span>(data.head())</span></code></pre></div>
-<pre><code>##   clinic name  sale date              product name  quantity sold
-## 0    Clinic G   1/2/2022  TA Tranexamic Acid Serum              1
-## 1    Clinic E   1/5/2022     Hyaluronic Acid Serum              1
-## 2    Clinic G   1/8/2022     Hyaluronic Acid Serum              1
-## 3    Clinic E   1/9/2022  TA Tranexamic Acid Serum              1
-## 4    Clinic E  1/12/2022  TA Tranexamic Acid Serum              1</code></pre>
-<p>Next I am going to subset the data down to info that Skin Laundry as specified</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="eda.html#cb8-1" tabindex="-1"></a>subset_data <span class="op">=</span> data[(data[<span class="st">&#39;clinic name&#39;</span>] <span class="op">==</span> <span class="st">&#39;Clinic G&#39;</span>) <span class="op">&amp;</span> (data[<span class="st">&#39;product name&#39;</span>] <span class="op">==</span> <span class="st">&#39;Hyaluronic Acid Serum&#39;</span>)]</span>
-<span id="cb8-2"><a href="eda.html#cb8-2" tabindex="-1"></a><span class="bu">print</span>(subset_data.head())</span></code></pre></div>
-<pre><code>##    clinic name  sale date           product name  quantity sold
-## 2     Clinic G   1/8/2022  Hyaluronic Acid Serum              1
-## 8     Clinic G  1/15/2022  Hyaluronic Acid Serum              1
-## 9     Clinic G  1/17/2022  Hyaluronic Acid Serum              1
-## 16    Clinic G  1/23/2022  Hyaluronic Acid Serum              1
-## 17    Clinic G  1/24/2022  Hyaluronic Acid Serum              1</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="eda.html#cb10-1" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="eda.html#cb10-2" tabindex="-1"></a><span class="co"># Cut the data down to the correct time range from the beginning of 2022 to</span></span>
-<span id="cb10-3"><a href="eda.html#cb10-3" tabindex="-1"></a><span class="co"># September 2024</span></span>
-<span id="cb10-4"><a href="eda.html#cb10-4" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="eda.html#cb10-5" tabindex="-1"></a><span class="co"># Define the start and end date for the time range</span></span>
-<span id="cb10-6"><a href="eda.html#cb10-6" tabindex="-1"></a>start_date <span class="op">=</span> <span class="st">&#39;1/2/2022&#39;</span></span>
-<span id="cb10-7"><a href="eda.html#cb10-7" tabindex="-1"></a>end_date <span class="op">=</span> <span class="st">&#39;9/30/2024&#39;</span></span>
-<span id="cb10-8"><a href="eda.html#cb10-8" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="eda.html#cb10-9" tabindex="-1"></a><span class="co"># Filter the data based on the time range</span></span>
-<span id="cb10-10"><a href="eda.html#cb10-10" tabindex="-1"></a>subset_data <span class="op">=</span> subset_data[(subset_data[<span class="st">&#39;sale date&#39;</span>] <span class="op">&gt;=</span> start_date) <span class="op">&amp;</span> (subset_data[<span class="st">&#39;sale date&#39;</span>] <span class="op">&lt;=</span> end_date)]</span></code></pre></div>
-<p>Next I am going to make sure the our variables are of correct type. Any
-variables that are not of the correct type, I will correct accordingly.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="eda.html#cb11-1" tabindex="-1"></a><span class="bu">print</span>(subset_data.info())</span></code></pre></div>
-<pre><code>## &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-## Index: 1353 entries, 2 to 16420
-## Data columns (total 4 columns):
-##  #   Column         Non-Null Count  Dtype 
-## ---  ------         --------------  ----- 
-##  0   clinic name    1353 non-null   object
-##  1   sale date      1353 non-null   object
-##  2   product name   1353 non-null   object
-##  3   quantity sold  1353 non-null   int64 
-## dtypes: int64(1), object(3)
-## memory usage: 52.9+ KB
-## None</code></pre>
-<p>I am going to change the “sale date” column to a datetime data type</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="eda.html#cb13-1" tabindex="-1"></a>subset_data.loc[:, <span class="st">&#39;sale date&#39;</span>] <span class="op">=</span> pd.to_datetime(subset_data[<span class="st">&#39;sale date&#39;</span>])</span></code></pre></div>
-<p>Next we are going to check fo NA values</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="eda.html#cb14-1" tabindex="-1"></a><span class="bu">print</span>(subset_data.isna().<span class="bu">sum</span>())</span></code></pre></div>
-<pre><code>## clinic name      0
-## sale date        0
-## product name     0
-## quantity sold    0
-## dtype: int64</code></pre>
-<p>We have 0 NA values!</p>
-<p>Lets count how many Hyaluronic Acid Serums clinic G has sold in total</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="eda.html#cb16-1" tabindex="-1"></a><span class="bu">print</span>(subset_data.groupby(<span class="st">&#39;product name&#39;</span>)[<span class="st">&#39;quantity sold&#39;</span>].<span class="bu">sum</span>())</span></code></pre></div>
-<pre><code>## product name
-## Hyaluronic Acid Serum    1394
-## Name: quantity sold, dtype: int64</code></pre>
-<p>I am going to save the clean data and pull it into R to build my time series
-model</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="eda.html#cb18-1" tabindex="-1"></a>subset_data.to_csv(<span class="st">&#39;subset_data.csv&#39;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
-<p>Clinic G for Skin Laundry has sold a total of 1,394 Hyaluronic Acids Serums from
-January 2022-September 2024!</p>
-<p>Moving forward, I will build a time series forecast that will look at the
-patterns in the data to predict demand for the Hyaluronic Acid Serum in Q3 of
-2024</p>
-
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="import-data-clean-data-and-subset-down.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
