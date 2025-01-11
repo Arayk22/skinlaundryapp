@@ -13,5 +13,3 @@ This is an introductory section.
 
 ## Load the Data
 Here we perform exploratory data analysis...
-
-```{r child="EDA.qmd"}
