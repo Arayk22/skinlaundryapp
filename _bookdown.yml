@@ -4,5 +4,5 @@ delete_merged_file: true
 edit: https://github.com/Arayk22/skinlaundryapp.git/%s
 view: https://github.com/Arayk22/skinlaundryapp.git/%s
 rmd_files:
-  -index.Rmd
-  -EDA.qmd
+  - index.Rmd
+  - EDA.qmd
