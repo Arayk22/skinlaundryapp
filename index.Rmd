@@ -1,9 +1,10 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAME HERE"
+title: "Skin Laundry Technical Assessment"
+author: "Austin Kolvek"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
 # Down the rabbit-hole
 
+#Executive Summary
