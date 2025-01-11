@@ -4,6 +4,8 @@ output: bookdown::html_document2
 
 # EDA
 
+#Import Data, Clean Data, and Subset Down
+
 ```{python}
 import pandas as pd
 data = pd.read_csv(r'C:\Users\austi\OneDrive\Documents\Interviews\Skin Laundry\Clinic Product Sales Data.csv') 
@@ -27,7 +29,7 @@ print(data['product category'].unique())
 "Serum" is the only value for the category, so we are good to drop this column
 as it provides no info for us
 
-Lets drop the columns we stated above
+Lets drop the columns we stated above.
 
 ```{python}
 data = data.drop(columns=['clinic area','guest user id','product category'])
@@ -39,6 +41,16 @@ Next I am going to subset the data down to info that Skin Laundry as specified
 ```{python}
 subset_data = data[(data['clinic name'] == 'Clinic G') & (data['product name'] == 'Hyaluronic Acid Serum')]
 print(subset_data.head())
+
+# Cut the data down to the correct time range from the beginning of 2022 to
+# September 2024
+
+# Define the start and end date for the time range
+start_date = '1/2/2022'
+end_date = '9/30/2024'
+
+# Filter the data based on the time range
+subset_data = subset_data[(subset_data['sale date'] >= start_date) & (subset_data['sale date'] <= end_date)]
 
 ```
 
@@ -54,7 +66,33 @@ I am going to change the "sale date" column to a datetime data type
 subset_data.loc[:, 'sale date'] = pd.to_datetime(subset_data['sale date'])
 ```
 
+Next we are going to check fo NA values
 
+```{python}
+print(subset_data.isna().sum())
+
+```
+We have 0 NA values!
+
+Lets count how many Hyaluronic Acid Serums clinic G has sold in total
+
+```{python}
+print(subset_data.groupby('product name')['quantity sold'].sum())
+```
+I am going to save the clean data and pull it into R to build my time series
+model
+```{python}
+subset_data.to_csv('subset_data.csv', index=False)
+
+```
+
+
+Clinic G for Skin Laundry has sold a total of 1,394 Hyaluronic Acids Serums from
+January 2022-September 2024!
+
+Moving forward, I will build a time series forecast that will look at the
+patterns in the data to predict demand for the Hyaluronic Acid Serum in Q3 of
+2024
 
 
 
