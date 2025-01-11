@@ -2,19 +2,16 @@
 output: bookdown::html_document2
 ---
 
-# EDA2
+# EDA
 
 ```{python}
 import pandas as pd
 
 data = pd.read_csv(r'C:\Users\austi\OneDrive\Documents\Interviews\Skin Laundry\Clinic Product Sales Data.csv') 
-
-print(data.head())
-print(data.info())
-
 ```
+
+Lets take a look at the first couple of observations!
 
 ```{python}
-print(2+2)
+print(data.head())
 ```
-

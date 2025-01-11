@@ -1,4 +1,2 @@
 welcome-to-the-skin-laundry-app
-data-analysis
-load-the-data
-eda2
+eda
