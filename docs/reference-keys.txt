@@ -1,4 +1,3 @@
 welcome-to-the-skin-laundry-app
 eda
-import-data-clean-data-and-subset-down
 modeling

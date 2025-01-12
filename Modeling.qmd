@@ -4,3 +4,244 @@ output: bookdown::html_document2
 
 # Modeling
 
+Lets bring in the data from the EDA and the promotion data!
+
+```{r}
+data <- read.csv('C:\\Users\\austi\\OneDrive\\Documents\\skinlaundryapp\\subset_data.csv')
+promo_data <- read.csv('C:\\Users\\austi\\OneDrive\\Documents\\Interviews\\Skin Laundry\\Promotion details and dates.csv')
+```
+
+Check to make sure the data looks good.
+
+```{r}
+library(lubridate)
+library(fpp3)
+str(data)
+
+#There needs to get one observation per day
+data <- data %>%
+  group_by(sale.date, clinic.name, product.name,Promotion) %>%
+  summarize(total_quantity_sold = sum(`quantity.sold`), .groups = 'drop')
+
+```
+
+To build a time series model, I am going to convert the data into a tsibble.
+This gets our data into the correct format and makes model building much
+easier.
+
+```{r}
+data<- data %>%
+  mutate(sale.date = as.Date(sale.date)) %>%
+  as_tsibble(index = sale.date)%>%
+  fill_gaps() %>%
+  mutate(total_quantity_sold = ifelse(is.na(total_quantity_sold), 0, total_quantity_sold)) %>% 
+  mutate(Promotion = ifelse(is.na(Promotion),"No Promotion", Promotion)) %>%
+  mutate(clinic.name = ifelse(is.na(clinic.name),"Clinic G", clinic.name)) %>%
+   mutate(product.name = ifelse(is.na(product.name),"Hyaluronic Acid Serum", product.name))
+```
+
+I am going to split the data into a training and test set. The training set
+will be all the data up until July of 2024 and the test set will be all of the
+data from July 2024-September 2024
+
+```{r}
+train <- data %>% 
+  select(total_quantity_sold, sale.date, Promotion) %>% 
+  filter_index(~ "2024-06-30")
+
+test <- data %>% 
+  select(total_quantity_sold, sale.date, Promotion) %>% 
+  filter_index("2024-07-01" ~ "2024-09-30")
+```
+
+Lets get a basic look for what the data looks like over time.
+
+```{r}
+library(scales)
+
+autoplot(train, total_quantity_sold) +
+  geom_line(aes(y = total_quantity_sold)) +
+  geom_point(aes(color = Promotion)) +
+  scale_x_date(
+    breaks = "1 month",  # Set the breaks to monthly intervals
+    labels = date_format("%b %Y")  # Format the labels as Month-Year
+  ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+```
+
+This is a very messy graph but a few points are good to point out. When there is
+a spike in sales for the product, there seems to be a promotion attached to the
+spike. It is note worthy to point out the 30% off all products, 30% off product,
+and Buy 2 Get Cleanser free are the promotions that have the biggest spikes in
+the data. On the flip side, the Spend more Save more, Buy 3 Get 1 free, and 10%
+off serums don't seem to boost sales for this specific product. 
+
+
+I am going to create a STL Decomposition to decide if the data has 
+seasonality or a trend to it
+
+```{r}
+stl <- train %>%
+  model(stl = STL(total_quantity_sold))
+
+components(stl)
+
+components(stl) %>%
+  autoplot() + theme_classic()
+
+
+train %>% 
+  features(total_quantity_sold, feat_stl)
+#trend = 0.3596
+#seasonality = 0.2737
+```
+
+There is not enough evidence to suggest there to be a trend or seasonality in 
+the data.
+
+The next step is to figure out if the data is stationary. I am going to perform
+a KPSS test to determine if there is stationarity or not.
+
+```{r}
+#What should the alpha level be?
+pchisq(log(909),1,lower.tail = F)
+
+#alpha level = 0.00905298
+
+train %>% features(total_quantity_sold, unitroot_kpss)
+```
+
+Since our p-value is to high, this suggest that the data is a random walk.
+It is not possible to forecast a random walk so in order to combat this, I am
+going to difference the quantity sold variable(The response variable). This will
+let us be able to create a forecast
+
+```{r}
+train <- train %>%
+  mutate(diff_quantity = difference(total_quantity_sold))
+```
+
+Next I am going to look at a Auto Correlation(ACF) and Partial Auto Correlation
+(PACF) plot to determine the patterns in the data
+
+```{r}
+train %>%
+  gg_tsdisplay(diff_quantity, plot_type = 'partial')
+```
+Notes from the ACF and PACF plot:
+
+To me, it looks like there is an exponential decrease in the pacf plot. This
+suggests that there are no auto regressive(AR) terms in the data and we should
+only be looking at how many moving average(MA) terms to add to our model.
+With the acf plot, there is a clear big spike at lag 1 and then a consistent
+hovering pattern around the confidence interval. This suggest there is one MA
+term that needs to be in the model.
+
+Moving forward, I will create a handful of different models to see which one
+works the best. Based on the AIC and BIC selection criteria, I will decide
+which model to move forward with
+
+```{r}
+models <- train %>% model(
+  auto = ARIMA(diff_quantity),
+  step = ARIMA(diff_quantity, stepwise = FALSE),
+  MA1 = ARIMA(diff_quantity ~ 0 + pdq(0,1,1) + PDQ(0,0,0)),
+  MA7 = ARIMA(diff_quantity ~ 0 + pdq(0,1,7) + PDQ(0,0,0)),
+  ARIMA91 = ARIMA(diff_quantity ~ 0 + pdq(9,1,1) + PDQ(0,0,0))
+)
+
+model_results <- as.data.frame(models)
+
+glance(models)
+
+
+models %>% select(ARIMA91) %>% gg_tsresiduals()
+
+augment(models) %>%
+  filter(.model == 'ARIMA91') %>%
+  features(.innov, ljung_box, lag = 12, dof = 10)
+```
+
+For the ARIMA models, I decided to pick a model with 9 AR terms, 1 MA terms, and
+took a difference. I choose this setup by looking at the ACF and PACF plots.
+The PACF plot looked liked it had an exponential decrease in it. Apon further
+examination at the tail end of the plot, the 20th and 27th lags show signs
+of being included in the model which tells me there needs to be AR terms in the
+model.
+
+After building the model, I looked at the residuals to determine if white noise
+was left over. I assessed white noise in two ways. The first was looking at the
+residual plot. I am comfortable with the distribution of the residuals being
+normal and the ACF plot being close to the bounds of the confidence interval. 
+The second was performing a Lijung Box test. With a p-value of 0.003 and the
+alpha level being 0.008, this tells me there is a little bit of noise that
+can still be modeled.
+
+When looking at the original plot, there was a point intervention that stood
+out to me. By including this point into the model, I think it might reduce the
+noise in the model to only have white noise left over.
+
+
+```{r}
+#Point intervention 692
+# Add a point intervention column to both the Train AND Test sets
+train$point <- rep(0,911)
+test$point <- rep(0,92)
+
+train$point[692] <- 1
+
+# Fit ARIMA model with intervention
+models_point <- train %>% model(
+  point_intervention = ARIMA(diff_quantity ~ point + lag(point) + 0 + pdq(9,1,1) + PDQ(0,0,0))
+)
+
+# Glance at model summary
+glance(models_point)
+
+# Visualize residuals of the point intervention model
+models_point %>% select(point_intervention) %>% gg_tsresiduals()
+
+# Ljung-Box test for autocorrelation in the residuals
+augment(models_point) %>%
+  filter(.model == 'point_intervention') %>%
+  features(.innov, ljung_box, lag = 12, dof = 10)
+
+# Forecasting the next 92 periods beyond the training data and plotting
+forecast_values_point <- models_point %>%
+  forecast(new_data = test)
+
+# Extract forecasted values
+forecasted_mean <- forecast_values_point$.mean
+
+# Ensure your actual values match the forecast horizon length
+actual_values <- test$total_quantity_sold[1:length(forecasted_mean)]
+
+# Calculate residuals (difference between actual and forecasted values)
+residuals <- actual_values - forecasted_mean
+
+# Calculate MAE (Mean Absolute Error)
+MAE <- mean(abs(residuals))
+MAE
+#MAE = 1.41
+```
+
+When adding a point intervention to the data, the model seems to only have white
+noise left over. I am comfortable with this conclusion due the residuals looking
+like a normal distribution, the lags are within the range of the CI and the 
+Lijung Box p-value came back at 0.008 with an alpha level of 0.008.
+
+To asses the accuracy of this model, I decided to use Mean Absolute Error(MAE).
+When using this model to forecast future demand of the Hyulanioc Acid product
+at clinic G for Q3, this model was 1.4 units off, on average.
+
+In the summary section, I will give a more detailed overview wrapping this
+analysis up and how Skin Laundry can use this model moving forward.
+
+
+
+
+
+
+
+
+
