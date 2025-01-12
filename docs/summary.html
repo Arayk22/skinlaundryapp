@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Skin Laundry Technical Assessment</title>
-  <meta name="description" content="Skin Laundry Technical Assessment" />
+  <title>4 Summary | Skin Laundry Technical Assessment</title>
+  <meta name="description" content="4 Summary | Skin Laundry Technical Assessment" />
   <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Skin Laundry Technical Assessment" />
+  <meta property="og:title" content="4 Summary | Skin Laundry Technical Assessment" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Skin Laundry Technical Assessment" />
+  <meta name="twitter:title" content="4 Summary | Skin Laundry Technical Assessment" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="modeling.html"/>
 
-<link rel="next" href="eda.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -163,16 +163,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Skin Laundry Technical Assessment</h1>
-<p class="author"><em>Austin Kolvek</em></p>
-<p class="date"><em>2025-01-12</em></p>
-</div>
-<div id="welcome-to-the-skin-laundry-app" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">1</span> Welcome to the Skin Laundry App<a href="index.html#welcome-to-the-skin-laundry-app" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The goal of this assessment is to take the data Skin Laundry has provided and
-build a forecasting model that will predict future demand for their Hyaluronic
-Acid Serum at clinic G during Q3 of 2024 (July - September 2024).</p>
+<div id="summary" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Summary<a href="summary.html#summary" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this analysis, a demand forecasting model was developed for Hyaluronic Acid
+serum at Clinic G for Q3 of 2024 (July–September). Using an ARIMA model with a
+point intervention, the model achieved a Mean Absolute Error (MAE) of 1.4,
+indicating a strong prediction accuracy. This performance provides the clinic
+with a reliable forecast, helping ensure that inventory is adequately stocked
+to meet customer demand and reduce the risk of out-of-stock situations during
+this period.</p>
+<p>Key Findings and Insights:</p>
+<p>Demand Forecasting Accuracy: The ARIMA model’s MAE of 1.4 suggests that the
+forecast is precise and can be trusted to guide inventory planning and ordering
+decisions for Hyaluronic Acid serum. This will be critical for ensuring that
+Clinic G can maintain stock levels that align with anticipated demand, thus
+avoiding overstocking or stockouts and optimizing warehouse operations.</p>
+<p>Promotions and Sales Patterns:
+An important insight was discovered when plotting the historical sales data
+alongside promotional periods. The data revealed that certain promotions
+influence product sales, while others do not. Specifically:</p>
+<p>Promotions with impact on sales:
+-&gt; 30% off all products
+-&gt; 30% off product
+-&gt; Buy 2 Get Cleanser free
+These promotions caused substantial spikes in sales, suggesting that Clinic G
+can strategically use these promotions to boost demand and drive sales for
+the Hyaluronic Acid serum.</p>
+<p>Promotions with minimal impact:
+-&gt; Spend more Save more
+-&gt; Buy 3 Get 1 free
+-&gt; 10% off serums
+These promotions did not produce noticeable increases in sales, indicating that
+they might not be as effective for this particular product.</p>
+<p>Business Implications:</p>
+<p>Inventory Management: With the forecasted demand in hand and an understanding
+of the promotional impact, Clinic G can optimize their ordering and stock
+levels. This ensures that the clinic is not overstocked during periods of low
+demand or understocked during promotional spikes, which is essential for
+maintaining customer satisfaction and maximizing sales.</p>
+<p>Promotion Strategy: The insights into promotional effectiveness offer valuable
+guidance for Clinic G’s future marketing strategies. By focusing on promotions
+that have historically proven successful, such as the “30% off all products” or
+“Buy 2 Get Cleanser free,” Clinic G can more effectively drive sales of the
+Hyaluronic Acid serum and achieve better return on investment from their
+marketing efforts. Additionally, reducing reliance on less effective promotions
+can help save resources and improve marketing efficiency.</p>
+<p>Forecast Accuracy for Planning: The ARIMA model’s accuracy in predicting the
+demand for Q3 2024 can serve as a reliable basis for other product demand
+forecasts. If the clinic utilizes similar forecasting techniques across other
+products, it will help to streamline their overall inventory management and
+improve operational efficiency.</p>
+<p>Conclusion:
+The demand forecasting model provides valuable insight into the future sales of
+Hyaluronic Acid serum at Clinic G, ensuring that inventory planning is accurate
+and efficient. By strategically aligning promotional efforts with the most
+impactful offers, Clinic G can boost sales and avoid unnecessary stockouts.
+Overall, these insights will help optimize the clinic’s operations, improve
+customer satisfaction, and drive growth in the coming quarter.</p>
 
 </div>
             </section>
@@ -180,8 +227,8 @@ Acid Serum at clinic G during Q3 of 2024 (July - September 2024).</p>
           </div>
         </div>
       </div>
+<a href="modeling.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="eda.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -212,7 +259,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/Arayk22/skinlaundryapp.git/index.Rmd",
+"link": "https://github.com/Arayk22/skinlaundryapp.git/Summary.qmd",
 "text": "Edit"
 },
 "history": {
@@ -220,7 +267,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/Arayk22/skinlaundryapp.git/index.Rmd",
+"link": "https://github.com/Arayk22/skinlaundryapp.git/Summary.qmd",
 "text": null
 },
 "download": null,
