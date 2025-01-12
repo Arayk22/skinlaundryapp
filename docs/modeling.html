@@ -280,8 +280,8 @@ let us be able to create a forecast.</p>
 <span id="cb37-2"><a href="modeling.html#cb37-2" tabindex="-1"></a>  <span class="fu">gg_tsdisplay</span>(diff_quantity, <span class="at">plot_type =</span> <span class="st">&#39;partial&#39;</span>)</span></code></pre></div>
 <pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_line()`).</code></pre>
 <pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_point()`).</code></pre>
-<p><img src="bookdownproj_files/figure-html/unnamed-chunk-19-1.png" width="672" />
-Notes from the ACF and PACF plot:</p>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Notes from the ACF and PACF plot:</p>
 <p>To me, it looks like there is an exponential decrease in the pacf plot. This
 suggests that there are no auto regressive(AR) terms in the data and we should
 only be looking at how many moving average(MA) terms to add to our model.
