@@ -12,6 +12,8 @@ with a reliable forecast, helping ensure that inventory is adequately stocked
 to meet customer demand and reduce the risk of out-of-stock situations during 
 this period.
 
+
+
 Key Findings and Insights:
 
 Demand Forecasting Accuracy: The ARIMA model's MAE of 1.4 suggests that the
@@ -40,6 +42,8 @@ Promotions with minimal impact:
 These promotions did not produce noticeable increases in sales, indicating that
 they might not be as effective for this particular product.
 
+
+
 Business Implications:
 
 Inventory Management: With the forecasted demand in hand and an understanding 
@@ -61,6 +65,7 @@ demand for Q3 2024 can serve as a reliable basis for other product demand
 forecasts. If the clinic utilizes similar forecasting techniques across other 
 products, it will help to streamline their overall inventory management and 
 improve operational efficiency.
+
 
 Conclusion:
 The demand forecasting model provides valuable insight into the future sales of

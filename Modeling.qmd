@@ -42,7 +42,7 @@ data<- data %>%
 
 I am going to split the data into a training and test set. The training set
 will be all the data up until July of 2024 and the test set will be all of the
-data from July 2024-September 2024
+data from July 2024-September 2024.
 
 ```{r}
 train <- data %>% 
@@ -76,9 +76,8 @@ and Buy 2 Get Cleanser free are the promotions that have the biggest spikes in
 the data. On the flip side, the Spend more Save more, Buy 3 Get 1 free, and 10%
 off serums don't seem to boost sales for this specific product. 
 
-
 I am going to create a STL Decomposition to decide if the data has 
-seasonality or a trend to it
+seasonality or a trend to it.
 
 ```{r}
 stl <- train %>%
@@ -114,7 +113,7 @@ train %>% features(total_quantity_sold, unitroot_kpss)
 Since our p-value is to high, this suggest that the data is a random walk.
 It is not possible to forecast a random walk so in order to combat this, I am
 going to difference the quantity sold variable(The response variable). This will
-let us be able to create a forecast
+let us be able to create a forecast.
 
 ```{r}
 train <- train %>%
@@ -122,7 +121,7 @@ train <- train %>%
 ```
 
 Next I am going to look at a Auto Correlation(ACF) and Partial Auto Correlation
-(PACF) plot to determine the patterns in the data
+(PACF) plot to determine the patterns in the data.
 
 ```{r}
 train %>%
@@ -139,7 +138,7 @@ term that needs to be in the model.
 
 Moving forward, I will create a handful of different models to see which one
 works the best. Based on the AIC and BIC selection criteria, I will decide
-which model to move forward with
+which model to move forward with.
 
 ```{r}
 models <- train %>% model(
@@ -180,7 +179,6 @@ can still be modeled.
 When looking at the original plot, there was a point intervention that stood
 out to me. By including this point into the model, I think it might reduce the
 noise in the model to only have white noise left over.
-
 
 ```{r}
 #Point intervention 692
@@ -236,12 +234,3 @@ at clinic G for Q3, this model was 1.4 units off, on average.
 
 In the summary section, I will give a more detailed overview wrapping this
 analysis up and how Skin Laundry can use this model moving forward.
-
-
-
-
-
-
-
-
-

@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Welcome to the Skin Laundry App
+# Assessment Objective
 
 The goal of this assessment is to take the data Skin Laundry has provided and 
 build a forecasting model that will predict future demand for their Hyaluronic

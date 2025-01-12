@@ -140,7 +140,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Skin Laundry Technical Assessment</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Welcome to the Skin Laundry App</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Assessment Objective</a></li>
 <li class="chapter" data-level="2" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>2</b> EDA</a></li>
 <li class="chapter" data-level="3" data-path="modeling.html"><a href="modeling.html"><i class="fa fa-check"></i><b>3</b> Modeling</a></li>
 <li class="chapter" data-level="4" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>4</b> Summary</a></li>
@@ -195,7 +195,7 @@ easier.</p>
 <span id="cb23-8"><a href="modeling.html#cb23-8" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">product.name =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(product.name),<span class="st">&quot;Hyaluronic Acid Serum&quot;</span>, product.name))</span></code></pre></div>
 <p>I am going to split the data into a training and test set. The training set
 will be all the data up until July of 2024 and the test set will be all of the
-data from July 2024-September 2024</p>
+data from July 2024-September 2024.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="modeling.html#cb24-1" tabindex="-1"></a>train <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
 <span id="cb24-2"><a href="modeling.html#cb24-2" tabindex="-1"></a>  <span class="fu">select</span>(total_quantity_sold, sale.date, Promotion) <span class="sc">%&gt;%</span> </span>
 <span id="cb24-3"><a href="modeling.html#cb24-3" tabindex="-1"></a>  <span class="fu">filter_index</span>(<span class="sc">~</span> <span class="st">&quot;2024-06-30&quot;</span>)</span>
@@ -222,7 +222,7 @@ and Buy 2 Get Cleanser free are the promotions that have the biggest spikes in
 the data. On the flip side, the Spend more Save more, Buy 3 Get 1 free, and 10%
 off serums don’t seem to boost sales for this specific product.</p>
 <p>I am going to create a STL Decomposition to decide if the data has
-seasonality or a trend to it</p>
+seasonality or a trend to it.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="modeling.html#cb26-1" tabindex="-1"></a>stl <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
 <span id="cb26-2"><a href="modeling.html#cb26-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">stl =</span> <span class="fu">STL</span>(total_quantity_sold))</span>
 <span id="cb26-3"><a href="modeling.html#cb26-3" tabindex="-1"></a></span>
@@ -271,11 +271,11 @@ a KPSS test to determine if there is stationarity or not.</p>
 <p>Since our p-value is to high, this suggest that the data is a random walk.
 It is not possible to forecast a random walk so in order to combat this, I am
 going to difference the quantity sold variable(The response variable). This will
-let us be able to create a forecast</p>
+let us be able to create a forecast.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="modeling.html#cb36-1" tabindex="-1"></a>train <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
 <span id="cb36-2"><a href="modeling.html#cb36-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff_quantity =</span> <span class="fu">difference</span>(total_quantity_sold))</span></code></pre></div>
 <p>Next I am going to look at a Auto Correlation(ACF) and Partial Auto Correlation
-(PACF) plot to determine the patterns in the data</p>
+(PACF) plot to determine the patterns in the data.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="modeling.html#cb37-1" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="modeling.html#cb37-2" tabindex="-1"></a>  <span class="fu">gg_tsdisplay</span>(diff_quantity, <span class="at">plot_type =</span> <span class="st">&#39;partial&#39;</span>)</span></code></pre></div>
 <pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range (`geom_line()`).</code></pre>
@@ -290,7 +290,7 @@ hovering pattern around the confidence interval. This suggest there is one MA
 term that needs to be in the model.</p>
 <p>Moving forward, I will create a handful of different models to see which one
 works the best. Based on the AIC and BIC selection criteria, I will decide
-which model to move forward with</p>
+which model to move forward with.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="modeling.html#cb40-1" tabindex="-1"></a>models <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span> <span class="fu">model</span>(</span>
 <span id="cb40-2"><a href="modeling.html#cb40-2" tabindex="-1"></a>  <span class="at">auto =</span> <span class="fu">ARIMA</span>(diff_quantity),</span>
 <span id="cb40-3"><a href="modeling.html#cb40-3" tabindex="-1"></a>  <span class="at">step =</span> <span class="fu">ARIMA</span>(diff_quantity, <span class="at">stepwise =</span> <span class="cn">FALSE</span>),</span>
